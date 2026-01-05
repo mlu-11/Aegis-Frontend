@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(155, 155, 155, 0.7);
+  }
+}
+
+@layer base {
+  * {
+    transition-property: color, background-color, border-color,
+      text-decoration-color, fill, stroke, opacity, box-shadow, transform,
+      filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+}
+
+@layer components {
+  .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.75rem;
+  }
+
+  .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem;
+  }
+
+  .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.5rem;
+  }
+
+  .focus-visible:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+
+  .card-hover {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid-responsive {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.MuiDialog-paper {
+  border-radius: 12px !important;
+}
+
+.MuiCard-root {
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.MuiChip-root {
+  border-radius: 6px !important;
+}
+
+.MuiButton-root {
+  border-radius: 6px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-bg: #121212;
+    --secondary-bg: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-break {
+    page-break-after: always;
+  }
+}
+
+
+/* Target all shapes (including rect for Tasks) and explicitly ensure only stroke is green */
+.bpmn-element-added .djs-visual > :is(rect, polygon, circle, path, polyline) {
+  fill: none !important; /* IMPORTANT: Remove fill to show only the frame */
+  stroke: #4caf50 !important; /* green stroke for element frame */
+  stroke-width: 2px !important;
+}

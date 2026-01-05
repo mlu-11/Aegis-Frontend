@@ -1,0 +1,223 @@
+@import "bpmn-js/dist/assets/diagram-js.css";
+@import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+
+.bpmn-container {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bpmn-container canvas {
+  outline: none;
+}
+
+.bpmn-container .djs-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.bpmn-container .djs-palette {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bpmn-container .djs-context-pad {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bpmn-container
+  .djs-element[data-element-id]
+  .djs-visual
+  > :is(
+    [data-element-id*="Task"],
+    [data-element-id*="UserTask"],
+    [data-element-id*="ServiceTask"],
+    [data-element-id*="ManualTask"],
+    [data-element-id*="BusinessRuleTask"],
+    [data-element-id*="ScriptTask"],
+    [data-element-id*="SendTask"],
+    [data-element-id*="ReceiveTask"]
+  ) {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bpmn-container
+  .djs-element[data-element-id]
+  .djs-visual
+  > :is(
+    [data-element-id*="Task"],
+    [data-element-id*="UserTask"],
+    [data-element-id*="ServiceTask"],
+    [data-element-id*="ManualTask"],
+    [data-element-id*="BusinessRuleTask"],
+    [data-element-id*="ScriptTask"],
+    [data-element-id*="SendTask"],
+    [data-element-id*="ReceiveTask"]
+  ):hover {
+  filter: brightness(1.1);
+  stroke-width: 2px !important;
+}
+
+.bpmn-container .djs-element[data-element-id*="Task"] {
+  cursor: pointer;
+}
+
+.bpmn-container .djs-element[data-element-id*="Task"]:hover .djs-visual > * {
+  filter: brightness(1.05);
+  stroke-width: 2px !important;
+}
+
+.bpmn-element-completed {
+  fill: #e8f5e9 !important;
+  stroke: #4caf50 !important;
+}
+
+.bpmn-element-in-progress {
+  fill: #fff3e0 !important;
+  stroke: #ff9800 !important;
+}
+
+.bpmn-element-not-started {
+  fill: #f5f5f5 !important;
+  stroke: #ccc !important;
+}
+
+.bpmn-element-blocked {
+  fill: #ffebee !important;
+  stroke: #f44336 !important;
+}
+
+/* .diff-added .djs-visual > :nth-child(1) {
+    /* Define the bright green outline */
+/* stroke: #10B981 !important; Tailwind Green 500 */
+/* stroke-width: 3px !important;  */
+
+/* Define a light green fill for visual emphasis */
+/* fill: #D1FAE5 !important; Tailwind Green 100 */
+
+/* Ensure the color style is applied to sequence flows (arrows), increase to 1 */
+/* fill-opacity: 1!important;    */
+/* }  */
+/* changes during editing */
+.bpmn-element-added .djs-visual > :nth-child(1) {
+  stroke: #4caf50 !important;
+  stroke-width: 4px !important;
+  fill-opacity: 0.2 !important;
+}
+
+/* Modified elements: orange outline */
+/* .bpmn-element-modified .djs-visual > :nth-child(1) {
+  stroke: #ff9800 !important;
+  stroke-width: 4px !important;
+  fill-opacity: 0.2 !important;
+} */
+
+.bpmn-element-deleted .djs-visual > :nth-child(1) {
+  stroke: #f44336 !important;
+  stroke-width: 4px !important;
+  fill-opacity: 0.2 !important;
+}
+
+.bpmn-element-added:not(.djs-connection) .djs-visual > :first-child {
+  stroke: #2e7d32 !important; /* Green */
+  fill: #e8f5e9 !important;
+}
+
+.bpmn-element-added.djs-connection .djs-visual > :first-child {
+  stroke: #2e7d32 !important; /* Green for arrows */
+}
+
+/* Diff styles from bpmn-js-differ */
+svg.diff-removed {
+  background: #da0e41;
+}
+
+.diff-removed.djs-element:not(.djs-connection) > .djs-visual > :nth-child(1) {
+  fill: #da0e41 !important; /* light-red */
+}
+
+.diff-removed.djs-connection > .djs-visual > :nth-child(1) {
+  stroke: #bb163f !important; /* red */
+}
+
+.marker.marker-removed {
+  background: #bb163f; /* red */
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+svg.diff-added {
+  background: #90dd5f;
+}
+/* light-green */
+.diff-added.djs-element:not(.djs-connection) > .djs-visual > :nth-child(1) {
+  fill: #90dd5f !important;
+}
+/* green */
+.diff-added.djs-connection > .djs-visual > :nth-child(1) {
+  stroke: #54b415 !important;
+}
+
+.marker.marker-added {
+  background: #54b415; /* green */
+  color: rgb(253, 251, 251);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+svg.diff-layout-changed {
+  background: #4d79a3;
+}
+
+.diff-layout-changed.djs-element:not(.djs-connection)
+  > .djs-visual
+  > :nth-child(1) {
+  fill: #4d79a3 !important; /* light-blue */
+}
+
+.diff-layout-changed.djs-connection > .djs-visual > :nth-child(1) {
+  stroke: #185085 !important; /* blue */
+}
+
+.marker.marker-layout-changed {
+  background: #185085; /* blue */
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+svg.diff-changed {
+  background: #fbc16c;
+}
+
+.diff-changed.djs-element:not(.djs-connection) > .djs-visual > :nth-child(1) {
+  fill: #fbc16c !important; /* light-yellow */
+}
+
+.diff-changed.djs-connection > .djs-visual > :nth-child(1) {
+  stroke: #cd8318 !important; /* yellow */
+}
+
+.marker.marker-changed {
+  background: #cd8318; /* yellow */
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
