@@ -20,8 +20,7 @@ import {
   CheckCircle,
   Visibility,
 } from "@mui/icons-material";
-import { Gantt, ViewMode, type Task } from "gantt-task-react";
-import "gantt-task-react/dist/index.css";
+
 import { useSprintStore } from "../stores/sprintStore";
 import { useProjectStore } from "../stores/projectStore";
 import { useIssueStore } from "../stores/issueStore";
