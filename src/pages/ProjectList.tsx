@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Container,
   Typography,
@@ -7,20 +7,21 @@ import {
   Box,
   Snackbar,
   Alert,
-} from '@mui/material';
-import { Add } from '@mui/icons-material';
-import { useProjectStore } from '../stores/projectStore';
-import { useUserStore } from '../stores/userStore';
-import { useIssueStore } from '../stores/issueStore';
-import { useSprintStore } from '../stores/sprintStore';
-import ProjectCard from '../components/ProjectCard';
-import ProjectForm from '../components/ProjectForm';
-import DeleteConfirmDialog from '../components/DeleteConfirmDialog';
-import type { Project } from '../types';
+} from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { useProjectStore } from "../stores/projectStore";
+import { useUserStore } from "../stores/userStore";
+//import { useIssueStore } from '../stores/issueStore';
+//import { useSprintStore } from '../stores/sprintStore';
+import ProjectCard from "../components/ProjectCard";
+import ProjectForm from "../components/ProjectForm";
+import DeleteConfirmDialog from "../components/DeleteConfirmDialog";
+import type { Project } from "../types";
 
 const ProjectList: React.FC = () => {
   const navigate = useNavigate();
-  const { projects, addProject, updateProject, deleteProject, fetchProjects } = useProjectStore();
+  const { projects, addProject, updateProject, deleteProject, fetchProjects } =
+    useProjectStore();
   const { fetchUsers } = useUserStore();
 
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
@@ -29,8 +30,8 @@ const ProjectList: React.FC = () => {
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
-    severity: 'success' | 'error' | 'info';
-  }>({ open: false, message: '', severity: 'success' });
+    severity: "success" | "error" | "info";
+  }>({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     fetchProjects();
@@ -55,7 +56,9 @@ const ProjectList: React.FC = () => {
     setDeletingProject(project);
   };
 
-  const handleProjectFormSubmit = async (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleProjectFormSubmit = async (
+    projectData: Omit<Project, "id" | "createdAt" | "updatedAt">
+  ) => {
     try {
       const memberIds = [...projectData.memberIds];
       if (!memberIds.includes(projectData.ownerId)) {
@@ -69,16 +72,16 @@ const ProjectList: React.FC = () => {
 
       if (editingProject) {
         await updateProject(editingProject.id, finalProjectData);
-        showSnackbar('Project updated successfully!', 'success');
+        showSnackbar("Project updated successfully!", "success");
       } else {
         await addProject(finalProjectData);
-        showSnackbar('Project created successfully!', 'success');
+        showSnackbar("Project created successfully!", "success");
       }
       await fetchProjects();
       setIsProjectFormOpen(false);
       setEditingProject(null);
     } catch (error) {
-      showSnackbar('An error occurred. Please try again.', 'error');
+      showSnackbar("An error occurred. Please try again.", "error");
     }
   };
 
@@ -89,14 +92,20 @@ const ProjectList: React.FC = () => {
         await deleteProject(deletingProject.id);
         await fetchProjects();
         setDeletingProject(null);
-        showSnackbar(`Project "${projectName}" deleted successfully!`, 'success');
+        showSnackbar(
+          `Project "${projectName}" deleted successfully!`,
+          "success"
+        );
       } catch (error) {
-        showSnackbar('An error occurred while deleting the project.', 'error');
+        showSnackbar("An error occurred while deleting the project.", "error");
       }
     }
   };
 
-  const showSnackbar = (message: string, severity: 'success' | 'error' | 'info') => {
+  const showSnackbar = (
+    message: string,
+    severity: "success" | "error" | "info"
+  ) => {
     setSnackbar({ open: true, message, severity });
   };
 
@@ -156,7 +165,7 @@ const ProjectList: React.FC = () => {
         onClose={() => setIsProjectFormOpen(false)}
         onSubmit={handleProjectFormSubmit}
         initialData={editingProject}
-        mode={editingProject ? 'edit' : 'create'}
+        mode={editingProject ? "edit" : "create"}
       />
 
       {/* 删除确认对话框 */}
@@ -174,7 +183,7 @@ const ProjectList: React.FC = () => {
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
           {snackbar.message}

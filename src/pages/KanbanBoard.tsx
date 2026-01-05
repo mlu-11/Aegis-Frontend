@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
 import {
   Typography,
   Box,
@@ -7,26 +7,33 @@ import {
   Snackbar,
   Alert,
   Paper,
-  Chip,
   LinearProgress,
-} from '@mui/material';
-import { Add, DirectionsRun, List } from '@mui/icons-material';
-import { DndContext } from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
-import { useIssueStore } from '../stores/issueStore';
-import { useProjectStore } from '../stores/projectStore';
-import { useSprintStore } from '../stores/sprintStore';
-import { useUserStore } from '../stores/userStore';
-import type { Issue, IssueStatus } from '../types';
-import KanbanColumn from '../components/KanbanColumn';
-import IssueForm, { type IssueFormData } from '../components/IssueForm';
-import IssueDetailModal from '../components/IssueDetailModal';
-import DeleteConfirmDialog from '../components/DeleteConfirmDialog';
+} from "@mui/material";
+import { Add, DirectionsRun } from "@mui/icons-material";
+import { DndContext } from "@dnd-kit/core";
+import type { DragEndEvent } from "@dnd-kit/core";
+import { useIssueStore } from "../stores/issueStore";
+import { useProjectStore } from "../stores/projectStore";
+import { useSprintStore } from "../stores/sprintStore";
+//import { useUserStore } from '../stores/userStore';
+import type { Issue, IssueStatus } from "../types";
+import KanbanColumn from "../components/KanbanColumn";
+import IssueForm, { type IssueFormData } from "../components/IssueForm";
+import IssueDetailModal from "../components/IssueDetailModal";
+import DeleteConfirmDialog from "../components/DeleteConfirmDialog";
 
 const KanbanBoard: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-  const { updateIssueStatus, addIssue, updateIssue, deleteIssue, getIssuesBySprint, getIssuesByProject, fetchIssues } = useIssueStore();
+  const {
+    updateIssueStatus,
+    addIssue,
+    updateIssue,
+    deleteIssue,
+    getIssuesBySprint,
+    getIssuesByProject,
+    fetchIssues,
+  } = useIssueStore();
   const { currentProject } = useProjectStore();
   const { getActiveSprint, fetchSprints } = useSprintStore();
 
@@ -37,15 +44,12 @@ const KanbanBoard: React.FC = () => {
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
-    severity: 'success' | 'error' | 'info';
-  }>({ open: false, message: '', severity: 'success' });
+    severity: "success" | "error" | "info";
+  }>({ open: false, message: "", severity: "success" });
 
   const loadData = async () => {
     if (projectId) {
-      await Promise.all([
-        fetchIssues(projectId),
-        fetchSprints(projectId)
-      ]);
+      await Promise.all([fetchIssues(projectId), fetchSprints(projectId)]);
     }
   };
 
@@ -62,14 +66,16 @@ const KanbanBoard: React.FC = () => {
   }
 
   const activeSprint = getActiveSprint(currentProject.id);
-  
-  const sprintIssues = activeSprint 
-    ? getIssuesBySprint(activeSprint.id) 
-    : getIssuesByProject(currentProject.id).filter(issue => !issue.sprintId);
-  
-  const todoIssues = sprintIssues.filter(issue => issue.status === 'TO_DO');
-  const inProgressIssues = sprintIssues.filter(issue => issue.status === 'IN_PROGRESS');
-  const doneIssues = sprintIssues.filter(issue => issue.status === 'DONE');
+
+  const sprintIssues = activeSprint
+    ? getIssuesBySprint(activeSprint.id)
+    : getIssuesByProject(currentProject.id).filter((issue) => !issue.sprintId);
+
+  const todoIssues = sprintIssues.filter((issue) => issue.status === "TO_DO");
+  const inProgressIssues = sprintIssues.filter(
+    (issue) => issue.status === "IN_PROGRESS"
+  );
+  const doneIssues = sprintIssues.filter((issue) => issue.status === "DONE");
 
   const handleCreateIssue = () => {
     setEditingIssue(null);
@@ -87,9 +93,9 @@ const KanbanBoard: React.FC = () => {
     try {
       await updateIssueStatus(issueId, newStatus);
       await loadData();
-      showSnackbar('Issue status updated!', 'success');
+      showSnackbar("Issue status updated!", "success");
     } catch (error) {
-      showSnackbar('Failed to update issue status', 'error');
+      showSnackbar("Failed to update issue status", "error");
     }
   };
 
@@ -112,25 +118,25 @@ const KanbanBoard: React.FC = () => {
       const { dependencies, ...otherData } = issueData;
       const backendData = {
         ...otherData,
-        dependencies: dependencies || [] // 确保 dependencies 是数组而不是 undefined
+        dependencies: dependencies || [], // 确保 dependencies 是数组而不是 undefined
       };
-      
+
       if (editingIssue) {
         await updateIssue(editingIssue.id, backendData as any);
-        showSnackbar('Issue updated successfully!', 'success');
+        showSnackbar("Issue updated successfully!", "success");
       } else {
         const issueDataWithSprint = {
           ...backendData,
-          sprintId: activeSprint?.id || backendData.sprintId
+          sprintId: activeSprint?.id || backendData.sprintId,
         };
         await addIssue(issueDataWithSprint as any);
-        showSnackbar('Issue created successfully!', 'success');
+        showSnackbar("Issue created successfully!", "success");
       }
       await loadData();
       setIsIssueFormOpen(false);
       setEditingIssue(null);
     } catch (error) {
-      showSnackbar('An error occurred. Please try again.', 'error');
+      showSnackbar("An error occurred. Please try again.", "error");
     }
   };
 
@@ -141,24 +147,30 @@ const KanbanBoard: React.FC = () => {
         await loadData();
         setDeletingIssue(null);
         setViewingIssue(null);
-        showSnackbar('Issue deleted successfully!', 'success');
+        showSnackbar("Issue deleted successfully!", "success");
       } catch (error) {
-        showSnackbar('An error occurred while deleting the issue.', 'error');
+        showSnackbar("An error occurred while deleting the issue.", "error");
       }
     }
   };
 
-  const handleIssueStatusChange = async (issueId: string, newStatus: string) => {
+  const handleIssueStatusChange = async (
+    issueId: string,
+    newStatus: string
+  ) => {
     try {
       await updateIssueStatus(issueId, newStatus as IssueStatus);
       await loadData();
-      showSnackbar('Issue status updated!', 'success');
+      showSnackbar("Issue status updated!", "success");
     } catch (error) {
-      showSnackbar('Failed to update issue status', 'error');
+      showSnackbar("Failed to update issue status", "error");
     }
   };
 
-  const showSnackbar = (message: string, severity: 'success' | 'error' | 'info') => {
+  const showSnackbar = (
+    message: string,
+    severity: "success" | "error" | "info"
+  ) => {
     setSnackbar({ open: true, message, severity });
   };
 
@@ -189,7 +201,8 @@ const KanbanBoard: React.FC = () => {
                   {activeSprint.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {activeSprint.startDate.toLocaleDateString()} - {activeSprint.endDate.toLocaleDateString()}
+                  {activeSprint.startDate.toLocaleDateString()} -{" "}
+                  {activeSprint.endDate.toLocaleDateString()}
                 </Typography>
               </Box>
             </Box>
@@ -204,7 +217,11 @@ const KanbanBoard: React.FC = () => {
               </Box>
               <LinearProgress
                 variant="determinate"
-                value={sprintIssues.length > 0 ? (doneIssues.length / sprintIssues.length) * 100 : 0}
+                value={
+                  sprintIssues.length > 0
+                    ? (doneIssues.length / sprintIssues.length) * 100
+                    : 0
+                }
                 sx={{ width: 100, height: 8, borderRadius: 4 }}
               />
             </Box>
@@ -272,8 +289,8 @@ const KanbanBoard: React.FC = () => {
         onClose={() => setIsIssueFormOpen(false)}
         onSubmit={handleIssueFormSubmit}
         initialData={editingIssue}
-        mode={editingIssue ? 'edit' : 'create'}
-        projectId={projectId || ''}
+        mode={editingIssue ? "edit" : "create"}
+        projectId={projectId || ""}
       />
 
       <IssueDetailModal
@@ -298,7 +315,7 @@ const KanbanBoard: React.FC = () => {
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
           {snackbar.message}

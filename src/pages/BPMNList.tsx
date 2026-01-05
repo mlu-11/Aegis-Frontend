@@ -71,12 +71,12 @@ const BPMNList: React.FC = () => {
   };
 
   //
-  const handleViewDiff = () => {
-    if (selectedDiagramId) {
-      navigate(`/project/${projectId}/bpmn/${selectedDiagramId}/diff`);
-    }
-    handleMenuClose();
-  };
+  // const handleViewDiff = () => {
+  //   if (selectedDiagramId) {
+  //     navigate(`/project/${projectId}/bpmn/${selectedDiagramId}/diff`);
+  //   }
+  //   handleMenuClose();
+  // };
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLElement>,

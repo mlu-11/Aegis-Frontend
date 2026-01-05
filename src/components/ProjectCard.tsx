@@ -13,7 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { People, MoreVert, Edit, Delete, OpenInNew } from "@mui/icons-material";
+import { People, MoreVert, Delete, OpenInNew } from "@mui/icons-material";
 import { useUserStore } from "../stores/userStore";
 import type { Project } from "../types";
 
@@ -26,7 +26,7 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
-  onEdit,
+  //onEdit,
   onDelete,
   onClick,
 }) => {
@@ -45,11 +45,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     setAnchorEl(null);
   };
 
-  const handleEdit = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    onEdit(project);
-    handleMenuClose();
-  };
+  // const handleEdit = (event: React.MouseEvent) => {
+  //   event.stopPropagation();
+  //   onEdit(project);
+  //   handleMenuClose();
+  // };
 
   const handleDelete = (event: React.MouseEvent) => {
     event.stopPropagation();

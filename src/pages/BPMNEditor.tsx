@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -8,14 +8,11 @@ import {
   Toolbar,
   IconButton,
   Chip,
-  FormControl,
-  Select,
-  MenuItem,
   Alert,
 } from "@mui/material";
 import { ArrowBack, Visibility } from "@mui/icons-material";
-import BpmnViewer from "bpmn-js/lib/Viewer";
-import { diff } from "bpmn-js-differ";
+//import BpmnViewer from "bpmn-js/lib/Viewer";
+//import { diff } from "bpmn-js-differ";
 // import "bpmn-js/dist/assets/diagram-js.css";
 // import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 // import "../styles/bpmn.css";
@@ -24,7 +21,7 @@ import BPMNModeler from "../components/bpmn/BPMNModeler";
 import IssueLinkDrawer from "../components/bpmn/IssueLinkDrawer";
 import { useBPMNStore } from "../stores/bpmnStore";
 import { useBPMNSync } from "../hooks/useBPMNSync";
-import { api } from "../utils/api";
+//import { api } from "../utils/api";
 
 const BPMNEditor: React.FC = () => {
   const { projectId, diagramId } = useParams<{
@@ -46,18 +43,18 @@ const BPMNEditor: React.FC = () => {
   const [saveStatus, setSaveStatus] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
-  // const [changeHistoryRefresh, setChangeHistoryRefresh] = useState(0);
+  const [, setChangeHistoryRefresh] = useState(0);
   // const [rightPanelMode, setRightPanelMode] = useState<"history" | "diff">(
   //   "history"
   // );
   // const [previousSprintXml, setPreviousSprintXml] = useState<string | null>(
   //   null
   // );
-  const [loadingSnapshot, setLoadingSnapshot] = useState(false);
-  const viewerOldContainerRef = useRef<HTMLDivElement>(null);
-  const viewerNewContainerRef = useRef<HTMLDivElement>(null);
-  const viewerOldRef = useRef<BpmnViewer | null>(null);
-  const viewerNewRef = useRef<BpmnViewer | null>(null);
+  // const [loadingSnapshot, setLoadingSnapshot] = useState(false);
+  // const viewerOldContainerRef = useRef<HTMLDivElement>(null);
+  // const viewerNewContainerRef = useRef<HTMLDivElement>(null);
+  // const viewerOldRef = useRef<BpmnViewer | null>(null);
+  //const viewerNewRef = useRef<BpmnViewer | null>(null);
 
   const diagram = diagrams.find((d) => d.id === diagramId);
 

@@ -33,7 +33,7 @@ const BPMNModeler: React.FC<BPMNModelerProps> = ({
   onElementClick,
   onChangesDetected,
   lastCommittedXml,
-  elementStatuses = [],
+  //elementStatuses = [],
   className = "",
   diagramId,
 }) => {
@@ -367,13 +367,13 @@ const BPMNModeler: React.FC<BPMNModelerProps> = ({
     }
   };
 
-  const shouldIgnoreElement = (elementType: string, elementName: string) => {
-    return (
-      elementType.includes("Flow") ||
-      elementType.includes("SequenceFlow") ||
-      !elementName.trim()
-    );
-  };
+  // const shouldIgnoreElement = (elementType: string, elementName: string) => {
+  //   return (
+  //     elementType.includes("Flow") ||
+  //     elementType.includes("SequenceFlow") ||
+  //     !elementName.trim()
+  //   );
+  // };
 
   const detectElementChanges = async () => {
     // const currentElements = getCurrentElements();

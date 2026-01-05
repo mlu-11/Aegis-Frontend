@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useBPMNStore } from "../stores/bpmnStore"; //
 import { useParams } from "react-router";
 import {
@@ -10,8 +10,6 @@ import {
   Snackbar,
   Alert,
   IconButton,
-  Card,
-  CardContent,
 } from "@mui/material";
 import {
   Add,
@@ -324,48 +322,6 @@ const SprintList: React.FC = () => {
     return (completedIssues / sprintIssues.length) * 100;
   };
 
-  const ganttTasks: Task[] = useMemo(() => {
-    return projectSprints.map((sprint) => {
-      const progress = getSprintProgress(sprint.id);
-      const sprintIssues = getIssuesBySprint(sprint.id);
-
-      return {
-        start: sprint.startDate,
-        end: sprint.endDate,
-        name: `${sprint.name} (${sprintIssues.length} issues)`,
-        id: sprint.id,
-        type: "task",
-        progress: progress,
-        isDisabled: false,
-        styles: {
-          progressColor:
-            sprint.status === "COMPLETED"
-              ? "#4caf50"
-              : sprint.status === "ACTIVE"
-              ? "#2196f3"
-              : "#ff9800",
-          progressSelectedColor:
-            sprint.status === "COMPLETED"
-              ? "#388e3c"
-              : sprint.status === "ACTIVE"
-              ? "#1976d2"
-              : "#f57c00",
-        },
-      };
-    });
-  }, [projectSprints, getIssuesBySprint]);
-
-  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Month);
-  const [isGanttView, setIsGanttView] = useState(false); // remove ganttview option
-
-  const handleTaskClick = (task: Task) => {
-    console.log("task clicked");
-    const sprint = projectSprints.find((s) => s.id === task.id);
-    if (sprint) {
-      handleViewSprint(sprint);
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "PLANNING":
@@ -407,45 +363,6 @@ const SprintList: React.FC = () => {
           Sprints Timeline
         </Typography>
         <Box className="flex gap-2 items-center">
-          {/* <Button
-            variant={isGanttView ? "contained" : "outlined"}
-            size="small"
-            onClick={() => setIsGanttView(true)}
-          >
-            Gantt View
-          </Button> */}
-          {/* <Button
-            variant={!isGanttView ? "contained" : "outlined"}
-            size="small"
-            onClick={() => setIsGanttView(false)}
-          >
-            List View
-          </Button> */}
-          {/* {isGanttView && (
-            <>
-              <Button
-                variant={viewMode === ViewMode.Day ? "contained" : "outlined"}
-                size="small"
-                onClick={() => setViewMode(ViewMode.Day)}
-              >
-                Day
-              </Button>
-              <Button
-                variant={viewMode === ViewMode.Week ? "contained" : "outlined"}
-                size="small"
-                onClick={() => setViewMode(ViewMode.Week)}
-              >
-                Week
-              </Button>
-              <Button
-                variant={viewMode === ViewMode.Month ? "contained" : "outlined"}
-                size="small"
-                onClick={() => setViewMode(ViewMode.Month)}
-              >
-                Month
-              </Button>
-            </>
-          )} */}
           <Button
             variant="contained"
             startIcon={<Add />}
@@ -457,179 +374,141 @@ const SprintList: React.FC = () => {
         </Box>
       </Box>
 
-      {isGanttView ? (
-        <Card className="mb-6">
-          <CardContent className="p-0">
-            {ganttTasks.length > 0 ? (
-              <Gantt
-                tasks={ganttTasks}
-                viewMode={viewMode}
-                onClick={handleTaskClick}
-                columnWidth={
-                  viewMode === ViewMode.Month
-                    ? 300
-                    : viewMode === ViewMode.Week
-                    ? 100
-                    : 65
-                }
-                rowHeight={50}
-                listCellWidth="250px"
-              />
-            ) : (
-              <Box className="p-8 text-center">
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  className="mb-2"
-                >
-                  No sprints to display
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Create your first sprint to see the timeline
-                </Typography>
-              </Box>
-            )}
-          </CardContent>
-        </Card>
-      ) : (
-        <Box className="space-y-4">
-          {projectSprints.map((sprint) => {
-            const sprintIssues = getIssuesBySprint(sprint.id);
-            const progress = getSprintProgress(sprint.id);
+      <Box className="space-y-4">
+        {projectSprints.map((sprint) => {
+          const sprintIssues = getIssuesBySprint(sprint.id);
+          const progress = getSprintProgress(sprint.id);
 
-            return (
-              <Box key={sprint.id}>
-                <Paper className="p-4 hover:shadow-md transition-shadow">
-                  <Box className="flex items-start justify-between mb-3">
-                    <Box>
-                      <Typography variant="h6" component="h2" className="mb-1">
-                        {sprint.name}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        className="mb-2"
-                      >
-                        {sprint.description}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {sprint.startDate.toLocaleDateString()} -{" "}
-                        {sprint.endDate.toLocaleDateString()}
-                      </Typography>
-                    </Box>
-
-                    <Box className="flex items-center gap-2">
-                      <Typography variant="body2" color="text.secondary">
-                        {Math.round(progress)}%
-                      </Typography>
-                      <Chip
-                        icon={getStatusIcon(sprint.status) || undefined}
-                        label={sprint.status}
-                        color={getStatusColor(sprint.status) as any}
-                        variant="outlined"
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box className="mb-3">
-                    <Box className="flex items-center justify-between mb-1">
-                      <Typography variant="body2" color="text.secondary">
-                        Progress: {Math.round(progress)}%
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {
-                          sprintIssues.filter(
-                            (issue) => issue.status === "DONE"
-                          ).length
-                        }{" "}
-                        / {sprintIssues.length} issues completed
-                      </Typography>
-                    </Box>
-                    <Box className="w-full bg-gray-200 rounded-full h-2">
-                      <Box
-                        className="h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${progress}%`,
-                          backgroundColor:
-                            sprint.status === "COMPLETED"
-                              ? "#4caf50"
-                              : sprint.status === "ACTIVE"
-                              ? "#2196f3"
-                              : "#ff9800",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box className="flex items-center justify-between">
-                    <Typography variant="body2" color="text.secondary">
-                      {sprintIssues.length} issues • Duration:{" "}
-                      {Math.ceil(
-                        (sprint.endDate.getTime() -
-                          sprint.startDate.getTime()) /
-                          (1000 * 60 * 60 * 24)
-                      )}{" "}
-                      days
+          return (
+            <Box key={sprint.id}>
+              <Paper className="p-4 hover:shadow-md transition-shadow">
+                <Box className="flex items-start justify-between mb-3">
+                  <Box>
+                    <Typography variant="h6" component="h2" className="mb-1">
+                      {sprint.name}
                     </Typography>
-
-                    <Box className="flex gap-2">
-                      <IconButton
-                        size="small"
-                        onClick={() => handleViewSprint(sprint)}
-                        title="View Details"
-                      >
-                        <Visibility fontSize="small" />
-                      </IconButton>
-
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleViewSprint(sprint)}
-                      >
-                        View Details
-                      </Button>
-
-                      {sprint.status === "PLANNING" && (
-                        <Button
-                          variant="contained"
-                          size="small"
-                          disabled={
-                            projectId ? !canStartSprint(projectId) : false
-                          }
-                          onClick={() =>
-                            handleSprintStatusChange(sprint.id, "ACTIVE")
-                          }
-                          title={
-                            projectId && !canStartSprint(projectId)
-                              ? "Another sprint is already active"
-                              : ""
-                          }
-                        >
-                          Start Sprint
-                        </Button>
-                      )}
-                      {sprint.status === "ACTIVE" && (
-                        <Button
-                          variant="contained"
-                          color="success"
-                          size="small"
-                          onClick={() =>
-                            handleSprintStatusChange(sprint.id, "COMPLETED")
-                          }
-                        >
-                          Complete Sprint
-                        </Button>
-                      )}
-                    </Box>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      className="mb-2"
+                    >
+                      {sprint.description}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {sprint.startDate.toLocaleDateString()} -{" "}
+                      {sprint.endDate.toLocaleDateString()}
+                    </Typography>
                   </Box>
-                </Paper>
-              </Box>
-            );
-          })}
-        </Box>
-      )}
 
-      {projectSprints.length === 0 && !isGanttView && (
+                  <Box className="flex items-center gap-2">
+                    <Typography variant="body2" color="text.secondary">
+                      {Math.round(progress)}%
+                    </Typography>
+                    <Chip
+                      icon={getStatusIcon(sprint.status) || undefined}
+                      label={sprint.status}
+                      color={getStatusColor(sprint.status) as any}
+                      variant="outlined"
+                    />
+                  </Box>
+                </Box>
+
+                <Box className="mb-3">
+                  <Box className="flex items-center justify-between mb-1">
+                    <Typography variant="body2" color="text.secondary">
+                      Progress: {Math.round(progress)}%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {
+                        sprintIssues.filter((issue) => issue.status === "DONE")
+                          .length
+                      }{" "}
+                      / {sprintIssues.length} issues completed
+                    </Typography>
+                  </Box>
+                  <Box className="w-full bg-gray-200 rounded-full h-2">
+                    <Box
+                      className="h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${progress}%`,
+                        backgroundColor:
+                          sprint.status === "COMPLETED"
+                            ? "#4caf50"
+                            : sprint.status === "ACTIVE"
+                            ? "#2196f3"
+                            : "#ff9800",
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                <Box className="flex items-center justify-between">
+                  <Typography variant="body2" color="text.secondary">
+                    {sprintIssues.length} issues • Duration:{" "}
+                    {Math.ceil(
+                      (sprint.endDate.getTime() - sprint.startDate.getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    )}{" "}
+                    days
+                  </Typography>
+
+                  <Box className="flex gap-2">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleViewSprint(sprint)}
+                      title="View Details"
+                    >
+                      <Visibility fontSize="small" />
+                    </IconButton>
+
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleViewSprint(sprint)}
+                    >
+                      View Details
+                    </Button>
+
+                    {sprint.status === "PLANNING" && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={
+                          projectId ? !canStartSprint(projectId) : false
+                        }
+                        onClick={() =>
+                          handleSprintStatusChange(sprint.id, "ACTIVE")
+                        }
+                        title={
+                          projectId && !canStartSprint(projectId)
+                            ? "Another sprint is already active"
+                            : ""
+                        }
+                      >
+                        Start Sprint
+                      </Button>
+                    )}
+                    {sprint.status === "ACTIVE" && (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        size="small"
+                        onClick={() =>
+                          handleSprintStatusChange(sprint.id, "COMPLETED")
+                        }
+                      >
+                        Complete Sprint
+                      </Button>
+                    )}
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+          );
+        })}
+      </Box>
+
+      {projectSprints.length === 0 && (
         <Paper className="p-8 text-center">
           <Typography variant="h6" color="text.secondary" className="mb-2">
             No sprints created yet

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+//import { useNavigate } from "react-router";
 import {
   Dialog,
   DialogTitle,
@@ -9,7 +9,7 @@ import {
   Box,
   Typography,
   Chip,
-  Avatar,
+  //Avatar,
   IconButton,
   Menu,
   MenuItem,
@@ -18,7 +18,6 @@ import {
   Divider,
   Card,
   CardContent,
-  CardActions,
 } from "@mui/material";
 import {
   MoreVert,
@@ -28,17 +27,11 @@ import {
   BugReport,
   Task as TaskIcon,
   Person,
-  Schedule,
-  CalendarToday,
-  Assignment,
-  AccountTree,
-  Visibility,
-  OpenInNew,
   Link as LinkIcon,
 } from "@mui/icons-material";
-import { useUserStore } from "../stores/userStore";
-import { useSprintStore } from "../stores/sprintStore";
-import { useBPMNStore } from "../stores/bpmnStore";
+//import { useUserStore } from "../stores/userStore";
+//import { useSprintStore } from "../stores/sprintStore";
+//import { useBPMNStore } from "../stores/bpmnStore";
 import type { Issue } from "../types";
 
 interface IssueDetailModalProps {
@@ -60,26 +53,26 @@ const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
   onStatusChange,
   onViewDependency,
 }) => {
-  const navigate = useNavigate();
-  const { getUserById } = useUserStore();
-  const { getSprintById } = useSprintStore();
-  const { diagrams } = useBPMNStore();
+  //const navigate = useNavigate();
+  //const { getUserById } = useUserStore();
+  // const { getSprintById } = useSprintStore();
+  //const { diagrams } = useBPMNStore();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   if (!issue) return null;
 
-  const assignee = issue.assigneeId ? getUserById(issue.assigneeId) : null;
-  const reporter = getUserById(issue.reporterId);
-  const sprint = issue.sprintId ? getSprintById(issue.sprintId) : null;
+  // const assignee = issue.assigneeId ? getUserById(issue.assigneeId) : null;
+  // const reporter = getUserById(issue.reporterId);
+  // const sprint = issue.sprintId ? getSprintById(issue.sprintId) : null;
 
-  const linkedBPMNElements = issue.linkedBPMNElements || [];
-  const linkedDiagrams = linkedBPMNElements.reduce((acc, element) => {
-    const diagram = diagrams.find((d) => d.id === element.diagramId);
-    if (diagram && !acc.some((d) => d.id === diagram.id)) {
-      acc.push(diagram);
-    }
-    return acc;
-  }, [] as typeof diagrams);
+  //const linkedBPMNElements = issue.linkedBPMNElements || [];
+  // const linkedDiagrams = linkedBPMNElements.reduce((acc, element) => {
+  //   const diagram = diagrams.find((d) => d.id === element.diagramId);
+  //   if (diagram && !acc.some((d) => d.id === diagram.id)) {
+  //     acc.push(diagram);
+  //   }
+  //   return acc;
+  // }, [] as typeof diagrams);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -142,9 +135,9 @@ const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
     onStatusChange(issue.id, newStatus);
   };
 
-  const handleViewBPMNDiagram = (diagramId: string) => {
-    navigate(`/project/${issue.projectId}/bpmn/${diagramId}/view`);
-  };
+  // const handleViewBPMNDiagram = (diagramId: string) => {
+  //   navigate(`/project/${issue.projectId}/bpmn/${diagramId}/view`);
+  // };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>

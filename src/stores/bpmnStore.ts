@@ -5,7 +5,7 @@ import type {
   BPMNElementStatus,
   Issue,
 } from "../types";
-import { calculateElementStatus } from "../utils/bpmnUtils";
+//import { calculateElementStatus } from "../utils/bpmnUtils";
 import { api } from "../utils/api";
 
 interface BPMNStore {
