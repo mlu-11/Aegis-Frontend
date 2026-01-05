@@ -19,13 +19,22 @@ class API {
   }
 
   async request(path: string, options: RequestInit = {}) {
+    const headers = new Headers(options.headers);
+
+    // Defaults
+    if (!headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    // Auth
+    const authHeaders = this.getAuthHeaders();
+    Object.entries(authHeaders).forEach(([key, value]) => {
+      headers.set(key, value);
+    });
+
     const res = await fetch(`${API_BASE_URL}${path}`, {
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...this.getAuthHeaders(),
-        ...(options.headers || {}),
-      },
+      headers, // ✅ satisfies HeadersInit
     });
 
     if (!res.ok) {

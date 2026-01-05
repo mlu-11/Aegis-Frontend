@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router';
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -12,63 +12,67 @@ import {
   Chip,
   Divider,
   Alert,
-} from '@mui/material';
-import {
-  ArrowBack,
-  Edit as EditIcon,
-} from '@mui/icons-material';
-import { useIssueStore } from '../stores/issueStore';
-import { useUserStore } from '../stores/userStore';
+} from "@mui/material";
+import { ArrowBack, Edit as EditIcon } from "@mui/icons-material";
+import { useIssueStore } from "../stores/issueStore";
+import { useUserStore } from "../stores/userStore";
 
 const IssueDetail: React.FC = () => {
-  const { projectId, issueId } = useParams<{ projectId: string; issueId: string }>();
+  const { projectId, issueId } = useParams<{
+    projectId: string;
+    issueId: string;
+  }>();
   const navigate = useNavigate();
-  
+
   const { getIssueById } = useIssueStore();
   const { users } = useUserStore();
 
   const issue = issueId ? getIssueById(issueId) : undefined;
-  const assignee = issue?.assigneeId ? users.find(u => u.id === issue.assigneeId) : undefined;
-  const reporter = issue ? users.find(u => u.id === issue.reporterId) : undefined;
+  const assignee = issue?.assigneeId
+    ? users.find((u) => u.id === issue.assigneeId)
+    : undefined;
+  const reporter = issue
+    ? users.find((u) => u.id === issue.reporterId)
+    : undefined;
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'TO_DO':
-        return 'default';
-      case 'IN_PROGRESS':
-        return 'primary';
-      case 'DONE':
-        return 'success';
+      case "TO_DO":
+        return "default";
+      case "IN_PROGRESS":
+        return "primary";
+      case "DONE":
+        return "success";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'HIGH':
-        return 'error';
-      case 'MEDIUM':
-        return 'warning';
-      case 'LOW':
-        return 'info';
-      case 'URGENT':
-        return 'error';
+      case "HIGH":
+        return "error";
+      case "MEDIUM":
+        return "warning";
+      case "LOW":
+        return "info";
+      case "URGENT":
+        return "error";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'BUG':
-        return 'error';
-      case 'TASK':
-        return 'info';
-      case 'USER_STORY':
-        return 'success';
+      case "BUG":
+        return "error";
+      case "TASK":
+        return "info";
+      case "USER_STORY":
+        return "success";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -97,7 +101,7 @@ const IssueDetail: React.FC = () => {
           <Button
             startIcon={<EditIcon />}
             onClick={() => {
-              console.log('Edit issue:', issue.id);
+              console.log("Edit issue:", issue.id);
             }}
           >
             Edit
@@ -113,18 +117,18 @@ const IssueDetail: React.FC = () => {
                 {issue.title}
               </Typography>
               <Box className="flex items-center gap-2 mb-4">
-                <Chip 
-                  label={issue.type} 
+                <Chip
+                  label={issue.type}
                   color={getTypeColor(issue.type) as any}
                   size="small"
                 />
-                <Chip 
-                  label={issue.status} 
+                <Chip
+                  label={issue.status}
                   color={getStatusColor(issue.status) as any}
                   size="small"
                 />
-                <Chip 
-                  label={issue.priority} 
+                <Chip
+                  label={issue.priority}
                   color={getPriorityColor(issue.priority) as any}
                   size="small"
                   variant="outlined"
@@ -139,7 +143,7 @@ const IssueDetail: React.FC = () => {
                 Description
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                {issue.description || 'No description provided'}
+                {issue.description || "No description provided"}
               </Typography>
             </Box>
 
@@ -151,7 +155,7 @@ const IssueDetail: React.FC = () => {
                   Assignee
                 </Typography>
                 <Typography variant="body2">
-                  {assignee ? assignee.name : 'Unassigned'}
+                  {assignee ? assignee.name : "Unassigned"}
                 </Typography>
               </Box>
 
@@ -160,7 +164,7 @@ const IssueDetail: React.FC = () => {
                   Reporter
                 </Typography>
                 <Typography variant="body2">
-                  {reporter ? reporter.name : 'Unknown'}
+                  {reporter ? reporter.name : "Unknown"}
                 </Typography>
               </Box>
 
@@ -169,7 +173,9 @@ const IssueDetail: React.FC = () => {
                   Estimated Hours
                 </Typography>
                 <Typography variant="body2">
-                  {issue.estimatedHours ? `${issue.estimatedHours}h` : 'Not estimated'}
+                  {issue.estimatedHours
+                    ? `${issue.estimatedHours}h`
+                    : "Not estimated"}
                 </Typography>
               </Box>
 
@@ -201,30 +207,31 @@ const IssueDetail: React.FC = () => {
               </Box>
             </Box>
 
-            {issue.linkedBPMNElements && issue.linkedBPMNElements.length > 0 && (
-              <>
-                <Divider className="my-4" />
-                <Box>
-                  <Typography variant="h6" className="mb-2">
-                    Linked BPMN Elements
-                  </Typography>
-                  <Box className="flex flex-wrap gap-2">
-                    {issue.linkedBPMNElements.map((elementId) => (
-                      <Chip
-                        key={elementId}
-                        label={elementId}
-                        variant="outlined"
-                        size="small"
-                        onClick={() => {
-                          navigate(`/project/${projectId}/bpmn`);
-                        }}
-                        clickable
-                      />
-                    ))}
+            {issue.linkedBPMNElements &&
+              issue.linkedBPMNElements.length > 0 && (
+                <>
+                  <Divider className="my-4" />
+                  <Box>
+                    <Typography variant="h6" className="mb-2">
+                      Linked BPMN Elements
+                    </Typography>
+                    <Box className="flex flex-wrap gap-2">
+                      {issue.linkedBPMNElements.map((el) => (
+                        <Chip
+                          key={`${el.diagramId}-${el.elementId}`} //
+                          label={el.elementId} //
+                          variant="outlined"
+                          size="small"
+                          onClick={() => {
+                            navigate(`/project/${projectId}/bpmn`);
+                          }}
+                          clickable
+                        />
+                      ))}
+                    </Box>
                   </Box>
-                </Box>
-              </>
-            )}
+                </>
+              )}
           </CardContent>
         </Card>
       </Box>

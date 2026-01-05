@@ -17,9 +17,9 @@ import {
 import { ArrowBack, Edit } from "@mui/icons-material";
 import BpmnViewer from "bpmn-js/lib/Viewer";
 import { diff } from "bpmn-js-differ";
-import "bpmn-js/dist/assets/diagram-js.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import "../styles/bpmn.css";
+import "bpmn-js/dist/assets/diagram-js.module.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.module.css";
+import "../styles/bpmn.module.css";
 
 import { useBPMNStore } from "../stores/bpmnStore";
 import { useSprintStore } from "../stores/sprintStore";
@@ -38,7 +38,9 @@ const BPMNDiffViewerPage: React.FC = () => {
 
   const [selectedSprintId1, setSelectedSprintId1] = useState<string>("");
   const [selectedSprintId2, setSelectedSprintId2] = useState<string>("");
-  const [compareMode, setCompareMode] = useState<"sprint-now" | "sprint-sprint">("sprint-now");
+  const [compareMode, setCompareMode] = useState<
+    "sprint-now" | "sprint-sprint"
+  >("sprint-now");
 
   const viewerOldContainerRef = useRef<HTMLDivElement>(null);
   const viewerNewContainerRef = useRef<HTMLDivElement>(null);
@@ -87,7 +89,12 @@ const BPMNDiffViewerPage: React.FC = () => {
     if (compareMode === "sprint-now") {
       // Compare selected sprint with current diagram
       if (!selectedSprintId1) {
-        return { sourceXml: null, targetXml: null, sourceLabel: "", targetLabel: "" };
+        return {
+          sourceXml: null,
+          targetXml: null,
+          sourceLabel: "",
+          targetLabel: "",
+        };
       }
       const sprint1 = completedSprints.find((s) => s.id === selectedSprintId1);
       const source = getSnapshotXmlForSprint(selectedSprintId1);
@@ -101,7 +108,12 @@ const BPMNDiffViewerPage: React.FC = () => {
     } else {
       // Compare two sprints
       if (!selectedSprintId1 || !selectedSprintId2) {
-        return { sourceXml: null, targetXml: null, sourceLabel: "", targetLabel: "" };
+        return {
+          sourceXml: null,
+          targetXml: null,
+          sourceLabel: "",
+          targetLabel: "",
+        };
       }
       const sprint1 = completedSprints.find((s) => s.id === selectedSprintId1);
       const sprint2 = completedSprints.find((s) => s.id === selectedSprintId2);
@@ -114,7 +126,13 @@ const BPMNDiffViewerPage: React.FC = () => {
         targetLabel: `${sprint2?.name || "Sprint 2"} (Snapshot)`,
       };
     }
-  }, [compareMode, selectedSprintId1, selectedSprintId2, completedSprints, diagram]);
+  }, [
+    compareMode,
+    selectedSprintId1,
+    selectedSprintId2,
+    completedSprints,
+    diagram,
+  ]);
 
   // Setup diff viewers
   useEffect(() => {
@@ -378,7 +396,10 @@ const BPMNDiffViewerPage: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      <Box className="flex-1 flex flex-col p-4 gap-3" style={{ overflow: "hidden" }}>
+      <Box
+        className="flex-1 flex flex-col p-4 gap-3"
+        style={{ overflow: "hidden" }}
+      >
         {/* Sprint selection controls */}
         <Box className="flex items-center gap-4 flex-wrap">
           <FormControl size="small" style={{ minWidth: 200 }}>
@@ -387,7 +408,9 @@ const BPMNDiffViewerPage: React.FC = () => {
               labelId="compare-mode-label"
               label="Compare Mode"
               value={compareMode}
-              onChange={(e) => setCompareMode(e.target.value as "sprint-now" | "sprint-sprint")}
+              onChange={(e) =>
+                setCompareMode(e.target.value as "sprint-now" | "sprint-sprint")
+              }
             >
               <MenuItem value="sprint-now">Sprint vs. Now</MenuItem>
               <MenuItem value="sprint-sprint">Sprint vs. Sprint</MenuItem>
@@ -396,11 +419,17 @@ const BPMNDiffViewerPage: React.FC = () => {
 
           <FormControl size="small" style={{ minWidth: 250 }}>
             <InputLabel id="sprint1-label">
-              {compareMode === "sprint-now" ? "Select Sprint" : "Sprint 1 (Baseline)"}
+              {compareMode === "sprint-now"
+                ? "Select Sprint"
+                : "Sprint 1 (Baseline)"}
             </InputLabel>
             <Select
               labelId="sprint1-label"
-              label={compareMode === "sprint-now" ? "Select Sprint" : "Sprint 1 (Baseline)"}
+              label={
+                compareMode === "sprint-now"
+                  ? "Select Sprint"
+                  : "Sprint 1 (Baseline)"
+              }
               value={selectedSprintId1}
               onChange={(e) => setSelectedSprintId1(e.target.value as string)}
             >
@@ -437,7 +466,10 @@ const BPMNDiffViewerPage: React.FC = () => {
 
         {/* Diff viewers or message */}
         {hasValidData ? (
-          <Box className="flex-1" style={{ display: "flex", gap: "8px", minHeight: 0 }}>
+          <Box
+            className="flex-1"
+            style={{ display: "flex", gap: "8px", minHeight: 0 }}
+          >
             <Box style={{ flex: 1, display: "flex", flexDirection: "column" }}>
               <Typography
                 variant="subtitle2"
@@ -495,7 +527,10 @@ const BPMNDiffViewerPage: React.FC = () => {
 
         {/* Legend */}
         {hasValidData && (
-          <Box className="p-4" style={{ background: "#f9f9f9", borderRadius: "4px" }}>
+          <Box
+            className="p-4"
+            style={{ background: "#f9f9f9", borderRadius: "4px" }}
+          >
             <Typography variant="subtitle2" gutterBottom>
               Diff Legend
             </Typography>

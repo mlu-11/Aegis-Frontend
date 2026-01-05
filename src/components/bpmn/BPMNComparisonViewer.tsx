@@ -3,7 +3,7 @@ import { Box, Typography, Paper, Alert } from "@mui/material";
 import BpmnDiffVisualizer from "./BpmnDiffVisualizer";
 import type { ComparisonResult } from "./BpmnGreedyComparator";
 
-import { getDefaultBPMNXML } from "../../utils/bpmnUtils"; // <-- ADDED IMPORT
+//import { getDefaultBPMNXML } from "../../utils/bpmnUtils"; // <-- ADDED IMPORT
 
 interface BPMNComparisonViewerProps {
   sourceXml: string;
@@ -14,7 +14,7 @@ interface BPMNComparisonViewerProps {
 const BPMNComparisonViewer: React.FC<BPMNComparisonViewerProps> = ({
   sourceXml,
   targetXml,
-  diagramName,
+  //diagramName,
 }) => {
   const [comparisonResult, setComparisonResult] =
     React.useState<ComparisonResult | null>(null);

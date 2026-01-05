@@ -20,16 +20,16 @@
     "bpmn-js": "^18.7.0",
     "bpmn-js-differ": "^3.1.0",
     "bpmn-js-properties-panel": "^5.42.1",
-    
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router": "^7.9.1",
     "react-router-dom": "^7.9.6",
+    "typescript-plugin-css-modules": "^5.2.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "@types/react": "^19.1.13",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.3",
     "autoprefixer": "^10.4.21",
@@ -38,6 +38,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
     "postcss": "^8.5.6",
+    "style-loader": "^4.0.0",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
