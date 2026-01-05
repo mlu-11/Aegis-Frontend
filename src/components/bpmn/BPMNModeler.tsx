@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import BpmnModeler from "bpmn-js/lib/Modeler";
-import "bpmn-js/dist/assets/diagram-js.module.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.module.css";
-import "../../styles/bpmn.module.css";
+import "bpmn-js/dist/assets/diagram-js.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import "../../styles/bpmn.css";
 import { Box, Alert } from "@mui/material";
 import { getDefaultBPMNXML } from "../../utils/bpmnUtils";
 import type { BPMNElementStatus, User } from "../../types";

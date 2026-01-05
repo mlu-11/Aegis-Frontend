@@ -17,9 +17,9 @@ import {
 import { ArrowBack, Edit } from "@mui/icons-material";
 import BpmnViewer from "bpmn-js/lib/Viewer";
 import { diff } from "bpmn-js-differ";
-import "bpmn-js/dist/assets/diagram-js.module.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.module.css";
-import "../styles/bpmn.module.css";
+import "bpmn-js/dist/assets/diagram-js.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import "../styles/bpmn.css";
 
 import { useBPMNStore } from "../stores/bpmnStore";
 import { useSprintStore } from "../stores/sprintStore";

@@ -13,9 +13,9 @@ import {
 import { ArrowBack, Visibility } from "@mui/icons-material";
 // import BpmnViewer from "bpmn-js/lib/Viewer";
 // import { diff } from "bpmn-js-differ";
-import "bpmn-js/dist/assets/diagram-js.module.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.module.css";
-import "../styles/bpmn.module.css";
+import "bpmn-js/dist/assets/diagram-js.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import "../styles/bpmn.css";
 import BPMNModeler from "../components/bpmn/BPMNModeler";
 //import BPMNChangeHistory from "../components/bpmn/BPMNChangeHistory";
 import IssueLinkDrawer from "../components/bpmn/IssueLinkDrawer";

@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import BpmnViewer from "bpmn-js/lib/Viewer";
-import "bpmn-js/dist/assets/diagram-js.module.css";
-import "bpmn-js/dist/assets/bpmn-font/css/bpmn.module.css";
-import "../../styles/bpmn.module.css";
+import "bpmn-js/dist/assets/diagram-js.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import "../../styles/bpmn.css";
 
 import { Box, Alert, Typography } from "@mui/material";
 import type { ComparisonResult } from "./BpmnGreedyComparator";
