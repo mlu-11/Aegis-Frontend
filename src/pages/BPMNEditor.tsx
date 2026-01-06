@@ -64,209 +64,35 @@ const BPMNEditor: React.FC = () => {
     }
   }, [diagram, diagramId, navigate, projectId]);
 
-  // Fetch previous sprint snapshot when switching to diff mode
-  // useEffect(() => {
-  //   const fetchPreviousSnapshot = async () => {
-  //     if (rightPanelMode === "diff" && diagramId && !previousSprintXml) {
-  //       setLoadingSnapshot(true);
-  //       try {
-  //         const snapshot = await api.get(
-  //           `/bpmn/diagrams/${diagramId}/previous-sprint-snapshot`
-  //         );
-  //         setPreviousSprintXml(snapshot.xml);
-  //       } catch (error) {
-  //         console.error("Failed to fetch previous sprint snapshot:", error);
-  //         setPreviousSprintXml(null);
-  //       } finally {
-  //         setLoadingSnapshot(false);
-  //       }
-  //     }
-  //   };
-
-  //   fetchPreviousSnapshot();
-  // }, [rightPanelMode, diagramId, previousSprintXml]);
-
-  // Setup diff viewers when in diff mode with snapshot available
-  // useEffect(() => {
-  //   if (
-  //     rightPanelMode === "diff" &&
-  //     previousSprintXml &&
-  //     diagram?.xml &&
-  //     viewerOldContainerRef.current &&
-  //     viewerNewContainerRef.current
-  //   ) {
-  //     // Clean up existing viewers
-  //     if (viewerOldRef.current) {
-  //       viewerOldRef.current.destroy();
-  //       viewerOldRef.current = null;
-  //     }
-  //     if (viewerNewRef.current) {
-  //       viewerNewRef.current.destroy();
-  //       viewerNewRef.current = null;
-  //     }
-
-  //     // Create old viewer (left side - previous sprint)
-  //     const viewerOld = new BpmnViewer({
-  //       container: viewerOldContainerRef.current,
-  //     });
-  //     viewerOldRef.current = viewerOld;
-
-  //     // Create new viewer (right side - current version)
-  //     const viewerNew = new BpmnViewer({
-  //       container: viewerNewContainerRef.current,
-  //     });
-  //     viewerNewRef.current = viewerNew;
-
-  //     // Sync viewboxes between viewers (based on diff-ui-example)
-  //     let changing = false;
-
-  //     const syncViewbox = (sourceViewer: any, targetViewer: any) => {
-  //       sourceViewer.on("canvas.viewbox.changed", (e: any) => {
-  //         if (changing) {
-  //           return;
-  //         }
-  //         changing = true;
-  //         targetViewer.get("canvas").viewbox(e.viewbox);
-  //         changing = false;
-  //       });
-  //     };
-
-  //     // Import both XMLs and apply diff
-  //     Promise.all([
-  //       viewerOld.importXML(previousSprintXml),
-  //       viewerNew.importXML(diagram.xml),
-  //     ])
-  //       .then(() => {
-  //         const result = diff(
-  //           viewerOld.getDefinitions(),
-  //           viewerNew.getDefinitions()
-  //         );
-
-  //         // Apply markers to OLD viewer (shows removed, changed, layout-changed)
-  //         const canvasOld = viewerOld.get("canvas") as any;
-  //         const overlaysOld = viewerOld.get("overlays") as any;
-
-  //         // Apply removed markers (red) on old viewer
-  //         Object.keys(result._removed).forEach((elementId) => {
-  //           try {
-  //             canvasOld.addMarker(elementId, "diff-removed");
-  //             overlaysOld.add(elementId, "diff", {
-  //               position: { top: -12, right: 12 },
-  //               html: '<span class="marker marker-removed">&minus;</span>',
-  //             });
-  //           } catch (e) {
-  //             // Element might not be visual
-  //           }
-  //         });
-
-  //         // Apply changed markers (orange) on old viewer
-  //         Object.keys(result._changed).forEach((elementId) => {
-  //           try {
-  //             canvasOld.addMarker(elementId, "diff-changed");
-  //             overlaysOld.add(elementId, "diff", {
-  //               position: { top: -12, right: 12 },
-  //               html: '<span class="marker marker-changed">&#9998;</span>',
-  //             });
-  //           } catch (e) {
-  //             // Element might not be visual
-  //           }
-  //         });
-
-  //         // Apply layout changed markers (blue) on old viewer
-  //         Object.keys(result._layoutChanged).forEach((elementId) => {
-  //           try {
-  //             canvasOld.addMarker(elementId, "diff-layout-changed");
-  //             overlaysOld.add(elementId, "diff", {
-  //               position: { top: -12, right: 12 },
-  //               html: '<span class="marker marker-layout-changed">&#8680;</span>',
-  //             });
-  //           } catch (e) {
-  //             // Element might not be visual
-  //           }
-  //         });
-
-  //         // Apply markers to NEW viewer (shows added, changed, layout-changed)
-  //         const canvasNew = viewerNew.get("canvas") as any;
-  //         const overlaysNew = viewerNew.get("overlays") as any;
-
-  //         // Apply added markers (green) on new viewer
-  //         Object.keys(result._added).forEach((elementId) => {
-  //           try {
-  //             canvasNew.addMarker(elementId, "diff-added");
-  //             overlaysNew.add(elementId, "diff", {
-  //               position: { top: -12, right: 12 },
-  //               html: '<span class="marker marker-added">&#43;</span>',
-  //             });
-  //           } catch (e) {
-  //             // Element might not be visual
-  //           }
-  //         });
-
-  //         // Apply changed markers (orange) on new viewer
-  //         Object.keys(result._changed).forEach((elementId) => {
-  //           try {
-  //             canvasNew.addMarker(elementId, "diff-changed");
-  //             overlaysNew.add(elementId, "diff", {
-  //               position: { top: -12, right: 12 },
-  //               html: '<span class="marker marker-changed">&#9998;</span>',
-  //             });
-  //           } catch (e) {
-  //             // Element might not be visual
-  //           }
-  //         });
-
-  //         // Apply layout changed markers (blue) on new viewer
-  //         Object.keys(result._layoutChanged).forEach((elementId) => {
-  //           try {
-  //             canvasNew.addMarker(elementId, "diff-layout-changed");
-  //             overlaysNew.add(elementId, "diff", {
-  //               position: { top: -12, right: 12 },
-  //               html: '<span class="marker marker-layout-changed">&#8680;</span>',
-  //             });
-  //           } catch (e) {
-  //             // Element might not be visual
-  //           }
-  //         });
-
-  //         // Sync viewboxes initially
-  //         const viewboxOld = canvasOld.viewbox();
-  //         canvasNew.viewbox(viewboxOld);
-
-  //         // Setup bidirectional viewbox synchronization
-  //         syncViewbox(viewerOld, viewerNew);
-  //         syncViewbox(viewerNew, viewerOld);
-  //       })
-  //       .catch((err: any) => {
-  //         console.error("Failed to import BPMN for diff:", err);
-  //       });
-  //   }
-
-  //   // Cleanup function
-  //   return () => {
-  //     if (viewerOldRef.current) {
-  //       viewerOldRef.current.destroy();
-  //       viewerOldRef.current = null;
-  //     }
-  //     if (viewerNewRef.current) {
-  //       viewerNewRef.current.destroy();
-  //       viewerNewRef.current = null;
-  //     }
-  //   };
-  // }, [rightPanelMode, previousSprintXml, diagram?.xml]);
-
-  const handleSave = (xml: string) => {
+  //fix save problem
+  const handleSave = async (xml: string) => {
     if (!diagramId) return;
 
     setSaveStatus("saving");
     try {
-      updateDiagram(diagramId, { xml });
+      await updateDiagram(diagramId, { xml });
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (error) {
+      console.error("Save failed:", error);
       setSaveStatus("error");
       setTimeout(() => setSaveStatus("idle"), 3000);
     }
   };
+  // const handleSave = async (xml: string) => {
+  //   if (!diagramId) return;
+
+  //   setSaveStatus("saving");
+  //   try {
+  //     await updateDiagram(diagramId, { xml });
+  //     setSaveStatus("saved");
+  //     setTimeout(() => setSaveStatus("idle"), 2000);
+  //   } catch (error) {
+  //     console.error("Save failed:", error);
+  //     setSaveStatus("error");
+  //     setTimeout(() => setSaveStatus("idle"), 3000);
+  //   }
+  // };
 
   const handleElementClick = (
     elementId: string,

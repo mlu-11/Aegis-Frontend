@@ -24,6 +24,9 @@ import "../styles/bpmn.css";
 import { useBPMNStore } from "../stores/bpmnStore";
 import { useSprintStore } from "../stores/sprintStore";
 
+import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
+import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
+
 const BPMNDiffViewerPage: React.FC = () => {
   const { projectId, diagramId } = useParams<{
     projectId: string;
@@ -46,6 +49,28 @@ const BPMNDiffViewerPage: React.FC = () => {
   const viewerNewContainerRef = useRef<HTMLDivElement>(null);
   const viewerOldRef = useRef<BpmnViewer | null>(null);
   const viewerNewRef = useRef<BpmnViewer | null>(null);
+
+  //helper
+  const handleFit = () => {
+    const vOld = viewerOldRef.current;
+    const vNew = viewerNewRef.current;
+    if (!vOld || !vNew) return;
+
+    const cOld = vOld.get("canvas") as any;
+    const cNew = vNew.get("canvas") as any;
+
+    cOld.zoom("fit-viewport");
+    cNew.viewbox(cOld.viewbox());
+  };
+  // helper  zoom function
+  const handleZoom = (step: number) => {
+    if (viewerOldRef.current && viewerNewRef.current) {
+      const canvas = viewerOldRef.current.get("canvas") as any;
+      const currentZoom = canvas.zoom();
+      canvas.zoom(currentZoom + step);
+      // The existing syncViewbox logic will automatically update viewerNew
+    }
+  };
 
   // Load sprints for this project
   useEffect(() => {
@@ -158,12 +183,14 @@ const BPMNDiffViewerPage: React.FC = () => {
     // Create old viewer (left side)
     const viewerOld = new BpmnViewer({
       container: viewerOldContainerRef.current,
+      additionalModules: [MoveCanvasModule, ZoomScrollModule],
     });
     viewerOldRef.current = viewerOld;
 
     // Create new viewer (right side)
     const viewerNew = new BpmnViewer({
       container: viewerNewContainerRef.current,
+      additionalModules: [MoveCanvasModule, ZoomScrollModule],
     });
     viewerNewRef.current = viewerNew;
 
@@ -194,6 +221,7 @@ const BPMNDiffViewerPage: React.FC = () => {
 
         // Apply markers to OLD viewer (shows removed, changed, layout-changed)
         const canvasOld = viewerOld.get("canvas") as any;
+
         const overlaysOld = viewerOld.get("overlays") as any;
 
         // Apply removed markers (red) on old viewer
@@ -277,6 +305,8 @@ const BPMNDiffViewerPage: React.FC = () => {
             // Element might not be visual
           }
         });
+
+        canvasOld.zoom("fit-viewport");
 
         // Sync viewboxes initially
         const viewboxOld = canvasOld.viewbox();
@@ -462,7 +492,41 @@ const BPMNDiffViewerPage: React.FC = () => {
               </Select>
             </FormControl>
           )}
+          {/* add fit button */}
+          {/* <Button variant="outlined" onClick={handleFit}>
+            Fit
+          </Button> */}
+          {/* Inside your Toolbar */}
+          <Box className="flex gap-2 ml-4">
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => handleZoom(0.2)}
+            >
+              Zoom In
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => handleZoom(-0.2)}
+            >
+              Zoom Out
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() =>
+                (viewerOldRef.current?.get("canvas") as any).zoom(
+                  "fit-viewport"
+                )
+              }
+            >
+              Reset
+            </Button>
+          </Box>
         </Box>
+
+        {/* zoom */}
 
         {/* Diff viewers or message */}
         {hasValidData ? (
@@ -487,7 +551,7 @@ const BPMNDiffViewerPage: React.FC = () => {
                 className="bpmn-container"
                 style={{
                   flex: 1,
-                  minHeight: "400px",
+                  minHeight: 0, //"400px"
                   position: "relative",
                 }}
               />
@@ -509,7 +573,7 @@ const BPMNDiffViewerPage: React.FC = () => {
                 className="bpmn-container"
                 style={{
                   flex: 1,
-                  minHeight: "400px",
+                  minHeight: 0, //"400px"
                   position: "relative",
                 }}
               />

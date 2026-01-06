@@ -58,6 +58,9 @@ const BPMNModeler: React.FC<BPMNModelerProps> = ({
   >([]);
   const previousXmlRef = useRef<string>("");
   const currentXmlRef = useRef<string>("");
+  //onSave
+  const saveTimerRef = useRef<number | null>(null);
+  const latestXmlRef = useRef<string>("");
 
   const logXmlChanges = (previousXml: string, currentXml: string) => {
     //Only log changes if a committed baseline exists.
@@ -507,9 +510,18 @@ const BPMNModeler: React.FC<BPMNModelerProps> = ({
             currentXmlRef.current = newXml;
           }
 
-          if (onSave) {
-            onSave(newXml);
+          // if (onSave) {
+          //   onSave(newXml);
+          // }
+          latestXmlRef.current = newXml;
+
+          if (saveTimerRef.current) {
+            window.clearTimeout(saveTimerRef.current);
           }
+
+          saveTimerRef.current = window.setTimeout(() => {
+            onSave?.(latestXmlRef.current);
+          }, 800);
         });
       }
     });
