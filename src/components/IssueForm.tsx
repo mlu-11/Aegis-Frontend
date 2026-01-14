@@ -483,7 +483,7 @@ const IssueForm: React.FC<IssueFormProps> = ({
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    estimatedHours: parseInt(e.target.value) || 0,
+                    estimatedHours: parseFloat(e.target.value) || 0,
                   })
                 }
                 inputProps={{ min: 0, step: 0.5 }}

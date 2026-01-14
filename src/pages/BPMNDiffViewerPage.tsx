@@ -51,17 +51,17 @@ const BPMNDiffViewerPage: React.FC = () => {
   const viewerNewRef = useRef<BpmnViewer | null>(null);
 
   //helper
-  const handleFit = () => {
-    const vOld = viewerOldRef.current;
-    const vNew = viewerNewRef.current;
-    if (!vOld || !vNew) return;
+  // const handleFit = () => {
+  //   const vOld = viewerOldRef.current;
+  //   const vNew = viewerNewRef.current;
+  //   if (!vOld || !vNew) return;
 
-    const cOld = vOld.get("canvas") as any;
-    const cNew = vNew.get("canvas") as any;
+  //   const cOld = vOld.get("canvas") as any;
+  //   const cNew = vNew.get("canvas") as any;
 
-    cOld.zoom("fit-viewport");
-    cNew.viewbox(cOld.viewbox());
-  };
+  //   cOld.zoom("fit-viewport");
+  //   cNew.viewbox(cOld.viewbox());
+  // };
   // helper  zoom function
   const handleZoom = (step: number) => {
     if (viewerOldRef.current && viewerNewRef.current) {
@@ -230,7 +230,7 @@ const BPMNDiffViewerPage: React.FC = () => {
             canvasOld.addMarker(elementId, "diff-removed");
             overlaysOld.add(elementId, "diff", {
               position: { top: -12, right: 12 },
-              html: '<span class="marker marker-removed">&minus;</span>',
+              // html: '<span class="marker marker-removed">&minus;</span>',
             });
           } catch (e) {
             // Element might not be visual
@@ -243,7 +243,7 @@ const BPMNDiffViewerPage: React.FC = () => {
             canvasOld.addMarker(elementId, "diff-changed");
             overlaysOld.add(elementId, "diff", {
               position: { top: -12, right: 12 },
-              html: '<span class="marker marker-changed">&#9998;</span>',
+              // html: '<span class="marker marker-changed">&#9998;</span>',
             });
           } catch (e) {
             // Element might not be visual
@@ -251,19 +251,19 @@ const BPMNDiffViewerPage: React.FC = () => {
         });
 
         // Apply layout changed markers (blue) on old viewer
-        Object.keys(result._layoutChanged).forEach((elementId) => {
-          try {
-            canvasOld.addMarker(elementId, "diff-layout-changed");
-            overlaysOld.add(elementId, "diff", {
-              position: { top: -12, right: 12 },
-              html: '<span class="marker marker-layout-changed">&#8680;</span>',
-            });
-          } catch (e) {
-            // Element might not be visual
-          }
-        });
+        // Object.keys(result._layoutChanged).forEach((elementId) => {
+        //   try {
+        //     canvasOld.addMarker(elementId, "diff-layout-changed");
+        //     overlaysOld.add(elementId, "diff", {
+        //       position: { top: -12, right: 12 },
+        //       html: '<span class="marker marker-layout-changed">&#8680;</span>',
+        //     });
+        //   } catch (e) {
+        //     // Element might not be visual
+        //   }
+        // });
 
-        // Apply markers to NEW viewer (shows added, changed, layout-changed)
+        // Apply markers to NEW viewer (shows added, changed)
         const canvasNew = viewerNew.get("canvas") as any;
         const overlaysNew = viewerNew.get("overlays") as any;
 
@@ -273,7 +273,7 @@ const BPMNDiffViewerPage: React.FC = () => {
             canvasNew.addMarker(elementId, "diff-added");
             overlaysNew.add(elementId, "diff", {
               position: { top: -12, right: 12 },
-              html: '<span class="marker marker-added">&#43;</span>',
+              // html: '<span class="marker marker-added">&#43;</span>',
             });
           } catch (e) {
             // Element might not be visual
@@ -286,25 +286,24 @@ const BPMNDiffViewerPage: React.FC = () => {
             canvasNew.addMarker(elementId, "diff-changed");
             overlaysNew.add(elementId, "diff", {
               position: { top: -12, right: 12 },
-              html: '<span class="marker marker-changed">&#9998;</span>',
+              // html: '<span class="marker marker-changed">&#9998;</span>',
             });
           } catch (e) {
             // Element might not be visual
           }
         });
-
         // Apply layout changed markers (blue) on new viewer
-        Object.keys(result._layoutChanged).forEach((elementId) => {
-          try {
-            canvasNew.addMarker(elementId, "diff-layout-changed");
-            overlaysNew.add(elementId, "diff", {
-              position: { top: -12, right: 12 },
-              html: '<span class="marker marker-layout-changed">&#8680;</span>',
-            });
-          } catch (e) {
-            // Element might not be visual
-          }
-        });
+        // Object.keys(result._layoutChanged).forEach((elementId) => {
+        //   try {
+        //     canvasNew.addMarker(elementId, "diff-layout-changed");
+        //     overlaysNew.add(elementId, "diff", {
+        //       position: { top: -12, right: 12 },
+        //       html: '<span class="marker marker-layout-changed">&#8680;</span>',
+        //     });
+        //   } catch (e) {
+        //     // Element might not be visual
+        //   }
+        // });
 
         canvasOld.zoom("fit-viewport");
 
@@ -615,12 +614,6 @@ const BPMNDiffViewerPage: React.FC = () => {
                 <span className="marker marker-changed">✎</span>
                 <Typography variant="body2">
                   <strong style={{ color: "#cd8318" }}>Changed</strong>
-                </Typography>
-              </Box>
-              <Box className="flex items-center gap-2">
-                <span className="marker marker-layout-changed">↯</span>
-                <Typography variant="body2">
-                  <strong style={{ color: "#185085" }}>Layout</strong>
                 </Typography>
               </Box>
             </Box>
