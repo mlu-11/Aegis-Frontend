@@ -143,11 +143,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
       });
       const { token, user } = response;
       api.setToken(token);
-      set({
-        currentUser: mapUser(user),
-        isAuthenticated: true,
-        loading: false,
-      });
+      await get().checkAuthStatus();
+      // set({
+      //   currentUser: mapUser(user),
+      //   isAuthenticated: true,
+      //   loading: false,
+      // });
     } catch (error) {
       console.error("Signup failed:", error);
       set({ loading: false });

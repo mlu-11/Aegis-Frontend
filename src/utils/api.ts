@@ -38,15 +38,30 @@ class API {
 
     const res = await fetch(`${API_BASE_URL}${path}`, {
       ...options,
-      headers, // ✅ satisfies HeadersInit
+      headers,
     });
 
-    if (!res.ok) {
-      const error = await res.json().catch(() => ({}));
-      throw new Error(error.message || "Request failed");
+    // Handle Unauthorized
+    if (res.status === 401) {
+      this.clearToken();
+      window.location.href = "/login";
+      throw new Error("Unauthorized");
     }
 
-    return res.json();
+    // Read body once
+    const text = await res.text();
+    let data: any = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { message: text };
+    }
+
+    if (!res.ok) {
+      throw new Error(data?.message || `Request failed (${res.status})`);
+    }
+
+    return data;
   }
 
   get(path: string) {
