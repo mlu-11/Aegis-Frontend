@@ -60,7 +60,7 @@ const IssueList: React.FC = () => {
   const { currentProject, setCurrentProject, getProjectById } =
     useProjectStore();
   const { users, getUserById } = useUserStore();
-  const { getSprintById } = useSprintStore();
+  const { getSprintById, fetchSprints } = useSprintStore();
 
   const [isIssueFormOpen, setIsIssueFormOpen] = useState(false);
   const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
@@ -91,7 +91,11 @@ const IssueList: React.FC = () => {
 
   const loadData = async () => {
     if (projectId) {
-      await fetchIssues(projectId);
+      // Call both to ensure issues and sprint assignments are up to date
+      await Promise.all([
+        fetchIssues(projectId),
+        fetchSprints(projectId), // add
+      ]);
     }
   };
 
@@ -160,15 +164,18 @@ const IssueList: React.FC = () => {
 
   const handleIssueFormSubmit = async (issueData: IssueFormData) => {
     try {
-      // 转换 IssueFormData 为后端期望的格式
+      // transform   the form of IssueFormData for backend form
       const { dependencies, ...otherData } = issueData;
       const backendData = {
         ...otherData,
-        dependencies: dependencies || [], // 确保 dependencies 是数组而不是 undefined
+        dependencies: dependencies || [], // make sure dependencies is array[] not undefined
       };
 
       if (editingIssue) {
         await updateIssue(editingIssue.id, backendData as any);
+        await fetchIssues(projectId); // Refresh issues
+        await fetchSprints(projectId); // Refresh sprints to update issueIds arrays
+
         showSnackbar("Issue updated successfully!", "success");
       } else {
         await addIssue(backendData as any);
@@ -247,7 +254,7 @@ const IssueList: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "TODO":
+      case "TO_DO":
         return "default";
       case "IN_PROGRESS":
         return "primary";
@@ -401,6 +408,9 @@ const IssueList: React.FC = () => {
                 const assignee = issue.assigneeId
                   ? getUserById(issue.assigneeId)
                   : null;
+                console.log(
+                  `Issue: ${issue.title}, SprintID: ${issue.sprintId}`
+                ); // Debugging
                 const sprint = issue.sprintId
                   ? getSprintById(issue.sprintId)
                   : null;
