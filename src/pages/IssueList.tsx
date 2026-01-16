@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import {
   Typography,
   Box,
@@ -25,7 +25,7 @@ import {
   Menu,
   ListItemIcon,
   ListItemText,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Add,
   Search,
@@ -38,15 +38,15 @@ import {
   Task,
   Person,
   Schedule,
-} from '@mui/icons-material';
-import { useIssueStore } from '../stores/issueStore';
-import { useProjectStore } from '../stores/projectStore';
-import { useUserStore } from '../stores/userStore';
-import { useSprintStore } from '../stores/sprintStore';
-import type { Issue } from '../types';
-import IssueForm, { type IssueFormData } from '../components/IssueForm';
-import IssueDetailModal from '../components/IssueDetailModal';
-import DeleteConfirmDialog from '../components/DeleteConfirmDialog';
+} from "@mui/icons-material";
+import { useIssueStore } from "../stores/issueStore";
+import { useProjectStore } from "../stores/projectStore";
+import { useUserStore } from "../stores/userStore";
+import { useSprintStore } from "../stores/sprintStore";
+import type { Issue } from "../types";
+import IssueForm, { type IssueFormData } from "../components/IssueForm";
+import IssueDetailModal from "../components/IssueDetailModal";
+import DeleteConfirmDialog from "../components/DeleteConfirmDialog";
 
 const IssueList: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -55,9 +55,10 @@ const IssueList: React.FC = () => {
     addIssue,
     updateIssue,
     deleteIssue,
-    fetchIssues
+    fetchIssues,
   } = useIssueStore();
-  const { currentProject, setCurrentProject, getProjectById } = useProjectStore();
+  const { currentProject, setCurrentProject, getProjectById } =
+    useProjectStore();
   const { users, getUserById } = useUserStore();
   const { getSprintById } = useSprintStore();
 
@@ -65,19 +66,21 @@ const IssueList: React.FC = () => {
   const [editingIssue, setEditingIssue] = useState<Issue | null>(null);
   const [viewingIssue, setViewingIssue] = useState<Issue | null>(null);
   const [deletingIssue, setDeletingIssue] = useState<Issue | null>(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState<{ [key: string]: HTMLElement | null }>({});
+  const [menuAnchorEl, setMenuAnchorEl] = useState<{
+    [key: string]: HTMLElement | null;
+  }>({});
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<string>('ALL');
-  const [filterPriority, setFilterPriority] = useState<string>('ALL');
-  const [filterStatus, setFilterStatus] = useState<string>('ALL');
-  const [filterAssignee, setFilterAssignee] = useState<string>('ALL');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState<string>("ALL");
+  const [filterPriority, setFilterPriority] = useState<string>("ALL");
+  const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const [filterAssignee, setFilterAssignee] = useState<string>("ALL");
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
-    severity: 'success' | 'error' | 'info';
-  }>({ open: false, message: '', severity: 'success' });
+    severity: "success" | "error" | "info";
+  }>({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     if (projectId) {
@@ -98,18 +101,28 @@ const IssueList: React.FC = () => {
 
   const projectIssues = projectId ? getIssuesByProject(projectId) : [];
 
-  const filteredIssues = projectIssues.filter(issue => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         issue.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredIssues = projectIssues.filter((issue) => {
+    const matchesSearch =
+      issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesType = filterType === 'ALL' || issue.type === filterType;
-    const matchesPriority = filterPriority === 'ALL' || issue.priority === filterPriority;
-    const matchesStatus = filterStatus === 'ALL' || issue.status === filterStatus;
-    const matchesAssignee = filterAssignee === 'ALL' ||
-                           (filterAssignee === 'UNASSIGNED' && !issue.assigneeId) ||
-                           issue.assigneeId === filterAssignee;
+    const matchesType = filterType === "ALL" || issue.type === filterType;
+    const matchesPriority =
+      filterPriority === "ALL" || issue.priority === filterPriority;
+    const matchesStatus =
+      filterStatus === "ALL" || issue.status === filterStatus;
+    const matchesAssignee =
+      filterAssignee === "ALL" ||
+      (filterAssignee === "UNASSIGNED" && !issue.assigneeId) ||
+      issue.assigneeId === filterAssignee;
 
-    return matchesSearch && matchesType && matchesPriority && matchesStatus && matchesAssignee;
+    return (
+      matchesSearch &&
+      matchesType &&
+      matchesPriority &&
+      matchesStatus &&
+      matchesAssignee
+    );
   });
 
   const handleCreateIssue = () => {
@@ -133,7 +146,10 @@ const IssueList: React.FC = () => {
     handleMenuClose(issue.id);
   };
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, issueId: string) => {
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    issueId: string
+  ) => {
     event.stopPropagation();
     setMenuAnchorEl({ ...menuAnchorEl, [issueId]: event.currentTarget });
   };
@@ -148,21 +164,21 @@ const IssueList: React.FC = () => {
       const { dependencies, ...otherData } = issueData;
       const backendData = {
         ...otherData,
-        dependencies: dependencies || [] // 确保 dependencies 是数组而不是 undefined
+        dependencies: dependencies || [], // 确保 dependencies 是数组而不是 undefined
       };
-      
+
       if (editingIssue) {
         await updateIssue(editingIssue.id, backendData as any);
-        showSnackbar('Issue updated successfully!', 'success');
+        showSnackbar("Issue updated successfully!", "success");
       } else {
         await addIssue(backendData as any);
-        showSnackbar('Issue created successfully!', 'success');
+        showSnackbar("Issue created successfully!", "success");
       }
       setIsIssueFormOpen(false);
       setEditingIssue(null);
       await loadData();
     } catch (error) {
-      showSnackbar('An error occurred. Please try again.', 'error');
+      showSnackbar("An error occurred. Please try again.", "error");
     }
   };
 
@@ -170,26 +186,32 @@ const IssueList: React.FC = () => {
     if (deletingIssue) {
       try {
         await deleteIssue(deletingIssue.id);
-        showSnackbar('Issue deleted successfully!', 'success');
+        showSnackbar("Issue deleted successfully!", "success");
         setDeletingIssue(null);
         await loadData();
       } catch (error) {
-        showSnackbar('An error occurred while deleting the issue.', 'error');
+        showSnackbar("An error occurred while deleting the issue.", "error");
       }
     }
   };
 
-  const handleIssueStatusChange = async (issueId: string, newStatus: string) => {
+  const handleIssueStatusChange = async (
+    issueId: string,
+    newStatus: string
+  ) => {
     try {
       await updateIssue(issueId, { status: newStatus as any });
-      showSnackbar('Issue status updated!', 'success');
+      showSnackbar("Issue status updated!", "success");
       await loadData();
     } catch (error) {
-      showSnackbar('An error occurred while updating the issue.', 'error');
+      showSnackbar("An error occurred while updating the issue.", "error");
     }
   };
 
-  const showSnackbar = (message: string, severity: 'success' | 'error' | 'info') => {
+  const showSnackbar = (
+    message: string,
+    severity: "success" | "error" | "info"
+  ) => {
     setSnackbar({ open: true, message, severity });
   };
 
@@ -199,11 +221,11 @@ const IssueList: React.FC = () => {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'BUG':
+      case "BUG":
         return <BugReport fontSize="small" color="error" />;
-      case 'USER_STORY':
+      case "USER_STORY":
         return <Person fontSize="small" color="primary" />;
-      case 'TASK':
+      case "TASK":
       default:
         return <Task fontSize="small" color="action" />;
     }
@@ -211,30 +233,30 @@ const IssueList: React.FC = () => {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'URGENT':
-        return 'error';
-      case 'HIGH':
-        return 'warning';
-      case 'MEDIUM':
-        return 'info';
-      case 'LOW':
+      case "URGENT":
+        return "error";
+      case "HIGH":
+        return "warning";
+      case "MEDIUM":
+        return "info";
+      case "LOW":
       default:
-        return 'default';
+        return "default";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'TODO':
-        return 'default';
-      case 'IN_PROGRESS':
-        return 'primary';
-      case 'IN_REVIEW':
-        return 'secondary';
-      case 'DONE':
-        return 'success';
+      case "TODO":
+        return "default";
+      case "IN_PROGRESS":
+        return "primary";
+      case "IN_REVIEW":
+        return "secondary";
+      case "DONE":
+        return "success";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -376,8 +398,12 @@ const IssueList: React.FC = () => {
             </TableHead>
             <TableBody>
               {filteredIssues.map((issue) => {
-                const assignee = issue.assigneeId ? getUserById(issue.assigneeId) : null;
-                const sprint = issue.sprintId ? getSprintById(issue.sprintId) : null;
+                const assignee = issue.assigneeId
+                  ? getUserById(issue.assigneeId)
+                  : null;
+                const sprint = issue.sprintId
+                  ? getSprintById(issue.sprintId)
+                  : null;
 
                 return (
                   <TableRow
@@ -390,7 +416,7 @@ const IssueList: React.FC = () => {
                       <Box className="flex items-center gap-1">
                         {getTypeIcon(issue.type)}
                         <Typography variant="caption">
-                          {issue.type.replace('_', ' ')}
+                          {issue.type.replace("_", " ")}
                         </Typography>
                       </Box>
                     </TableCell>
@@ -398,13 +424,17 @@ const IssueList: React.FC = () => {
                       <Typography variant="subtitle2" className="font-medium">
                         {issue.title}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary" className="line-clamp-1">
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        className="line-clamp-1"
+                      >
                         {issue.description}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={issue.status.replace('_', ' ')}
+                        label={issue.status.replace("_", " ")}
                         size="small"
                         color={getStatusColor(issue.status) as any}
                         variant="outlined"
@@ -426,7 +456,9 @@ const IssueList: React.FC = () => {
                             alt={assignee.name}
                             sx={{ width: 24, height: 24 }}
                           />
-                          <Typography variant="body2">{assignee.name}</Typography>
+                          <Typography variant="body2">
+                            {assignee.name}
+                          </Typography>
                         </Box>
                       ) : (
                         <Typography variant="body2" color="text.secondary">
@@ -452,10 +484,14 @@ const IssueList: React.FC = () => {
                       {issue.estimatedHours ? (
                         <Box className="flex items-center gap-1">
                           <Schedule fontSize="small" color="action" />
-                          <Typography variant="body2">{issue.estimatedHours}h</Typography>
+                          <Typography variant="body2">
+                            {issue.estimatedHours}h
+                          </Typography>
                         </Box>
                       ) : (
-                        <Typography variant="body2" color="text.secondary">-</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          -
+                        </Typography>
                       )}
                     </TableCell>
                     <TableCell>
@@ -500,13 +536,14 @@ const IssueList: React.FC = () => {
         {filteredIssues.length === 0 && (
           <Box className="p-8 text-center">
             <Typography variant="h6" color="text.secondary" className="mb-2">
-              {projectIssues.length === 0 ? 'No issues found' : 'No issues match your filters'}
+              {projectIssues.length === 0
+                ? "No issues found"
+                : "No issues match your filters"}
             </Typography>
             <Typography variant="body2" color="text.secondary" className="mb-4">
               {projectIssues.length === 0
-                ? 'Create your first issue to start tracking work'
-                : 'Try adjusting your search criteria or filters'
-              }
+                ? "Create your first issue to start tracking work"
+                : "Try adjusting your search criteria or filters"}
             </Typography>
             {projectIssues.length === 0 && (
               <Button
@@ -527,8 +564,8 @@ const IssueList: React.FC = () => {
         onClose={() => setIsIssueFormOpen(false)}
         onSubmit={handleIssueFormSubmit}
         initialData={editingIssue}
-        mode={editingIssue ? 'edit' : 'create'}
-        projectId={projectId || ''}
+        mode={editingIssue ? "edit" : "create"}
+        projectId={projectId || ""}
       />
 
       {/* Issue详情模态框 */}
@@ -556,7 +593,7 @@ const IssueList: React.FC = () => {
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
           {snackbar.message}

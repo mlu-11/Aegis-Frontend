@@ -712,13 +712,25 @@ const IssueForm: React.FC<IssueFormProps> = ({
                       const story = availableUserStories.find(
                         (s) => s.id === dep.issueId
                       );
+                      // Create a safe display name
+                      const displayName =
+                        story?.title ||
+                        (typeof dep.issueId === "object"
+                          ? (dep.issueId as any).title
+                          : dep.issueId);
+
                       return (
                         <Box
-                          key={dep.issueId}
+                          key={
+                            typeof dep.issueId === "object"
+                              ? (dep.issueId as any)._id
+                              : dep.issueId
+                          } //{dep.issueId}
                           className="p-3 border border-gray-200 rounded space-y-2"
                         >
                           <Typography variant="body2" className="font-medium">
-                            {story?.title ?? dep.issueId}
+                            {displayName} {/* Now safely a string */}
+                            {/* {story?.title ?? dep.issueId} */}
                           </Typography>
                           <TextField
                             fullWidth
